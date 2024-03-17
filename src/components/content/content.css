@@ -1,0 +1,18 @@
+.conteiner {
+    display: flex;
+    position: relative;
+}
+
+.conteiner-elem {
+    display: block;
+    width: 320px;
+    text-align: center;
+}
+
+.conteiner-elem__description,
+.conteiner-elem__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* margin: ; */
+}

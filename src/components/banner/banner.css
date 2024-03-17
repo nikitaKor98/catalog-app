@@ -1,0 +1,12 @@
+.banner {
+    width: 100%;
+    display: flex;
+    border-radius: 40px;
+    position: relative;
+}
+
+.img {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
