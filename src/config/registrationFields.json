@@ -1,11 +1,5 @@
 [
-    {
-        "fields": ["email"]
-    },
-    {
-        "fields": ["phone"]
-    },
-    {
-        "fields": ["password"]
-    }
+    "email",
+    "phone",
+    "password"
 ]

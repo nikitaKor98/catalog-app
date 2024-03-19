@@ -1,18 +1,22 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import Dropdown from "../dropdown/Dropdown";
+import { useGlobalModals, MODAL_TYPES } from "../../common/GlobalModalsProvider";
+
 import { Fetch } from "../fetch/Fetch";
 
 import "./header.css"
 
-const Header = ({ showHiddenModal, setActivNavigation, activNavigation }) => {
+const Header = ({ setActivNavigation, activNavigation }) => {
 
     const [showHiddenDropdown, setShowHiddenDropdown] = useState(false);
     const [product, setProduct] = useState([]);
     const [title, setTitle] = useState("");
 
     const { request } = Fetch();
+
+    const { open } = useGlobalModals();
 
     const debounceInput = (fn, time) => {
         let timeoutId;
@@ -86,14 +90,10 @@ const Header = ({ showHiddenModal, setActivNavigation, activNavigation }) => {
             </div>
             <div className="header-log">
                 <button
-                    onClick={() => {
-                        showHiddenModal("LOG", [0, 1]);
-                    }}
+                    onClick={() => open(MODAL_TYPES.SIGNIN)}
                     className="btn">log in</button>
                 <button
-                    onClick={() => {
-                        showHiddenModal("SING", [0]);
-                    }}
+                    onClick={() => open(MODAL_TYPES.SIGNUP)}
                     className="btn">sign up</button>
             </div>
         </div>

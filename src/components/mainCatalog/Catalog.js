@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Fetch } from "../fetch/Fetch";
 import Content from "../content/Content";
 import FiltersCatalog from "../mainFiltresCatalig/FiltersCatalog";
+import Loader from "../loader/Loader";
+
+import { Fetch } from "../fetch/Fetch";
 
 import "./catalog.css"
 
@@ -33,7 +35,7 @@ const Catalog = () => {
     const query = new URLSearchParams(search);
     let title = query.get("title");
 
-    const { request } = Fetch();
+    const { request, setStage, stage } = Fetch();
 
     useEffect(() => {
         title || filtersCategory ? getAllProducts(1, [], title, filtersCategory, filterPrice) : getAllProducts();
@@ -67,10 +69,13 @@ const Catalog = () => {
             type,
             price
         }))
-            .then(data => setFiltersCatalog(data.data));
+            .then(data => setFiltersCatalog(data.data))
+            .then(() => setStage("completed"));
     }
 
     const getAllProducts = (num = 1, productData = [], title = null, category = null, price = null) => {
+        setStage("waiting");
+
         request("http://localhost:3001/goods", "POST", JSON.stringify({
             pageSize: 6,
             pageNumber: num,
@@ -94,7 +99,7 @@ const Catalog = () => {
                 setEvent("updata");
             }
             data.data.length === 6 ? setShowHiddenButton(true) : setShowHiddenButton(false);
-        });
+        }).then(() => setStage("completed"));
     }
 
     const debounceFilterPrice = (value, type, time = 1000) => {
@@ -207,18 +212,24 @@ const Catalog = () => {
                 {filters}
             </div>
             <div className="main-contents">
-                <div className="contents">
-                    {contents}
-                </div>
-                <button
-                    style={{ display: showHiddenButton ? "" : "none" }}
-                    className="btn"
-                    onClick={() => {
-                        const prop = title ? title : null;
-                        const price = productInfo.userPrice ? [productInfo.userPrice[0], productInfo.userPrice[1]] : filterPrice;
-                        getAllProducts(productInfo.pageNumber + 1, productData, prop, filtersCategory, price);
-                    }}
-                >show more</button>
+                {stage === "waiting" &&
+                    <div className="loader-container">
+                        <Loader />
+                    </div>}
+                {stage === "completed" && <>
+                    <div className="contents">
+                        {contents}
+                    </div>
+                    <button
+                        style={{ display: showHiddenButton ? "" : "none" }}
+                        className="btn"
+                        onClick={() => {
+                            const prop = title ? title : null;
+                            const price = productInfo.userPrice ? [productInfo.userPrice[0], productInfo.userPrice[1]] : filterPrice;
+                            getAllProducts(productInfo.pageNumber + 1, productData, prop, filtersCategory, price);
+                        }}
+                    >show more</button>
+                </>}
             </div>
         </div>
     );

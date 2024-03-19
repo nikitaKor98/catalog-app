@@ -1,6 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export const Fetch = () => {
+
+    const [stage, setStage] = useState("waiting");
+
     const request = useCallback(async (
         url,
         method = "GET",
@@ -22,5 +25,5 @@ export const Fetch = () => {
         }
     }, []);
 
-    return { request };
+    return { request, setStage, stage };
 }
